@@ -1,5 +1,6 @@
 package com.webscrape.thread;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,7 +14,7 @@ public class Processor implements Callable<JsonNode> {
 		this.node = node;
 	}
 
-	public JsonNode call() {
+	public JsonNode call() throws NullPointerException, RuntimeException, IOException {
 		return jsonUtil.createOutputJson(node);
 	}
 

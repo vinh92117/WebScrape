@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -22,30 +21,24 @@ public class JsonUtil {
 	
 	public JsonNode convertToJson(String input) throws IOException {
 		JsonNode json = mapper.readTree(input);
-		if (json == null || json.size() == 0) {
-			logger.log(Level.SEVERE, "Contents provides an invalid JSON");
-			throw new NullPointerException();
-		}
+		if (json == null || json.size() == 0)
+			throw new NullPointerException("Invalid JSON from provided contents");
 		
 		return json;
 	}
 	
-	public JsonNode createOutputJson(JsonNode jsonInput) throws NullPointerException, RuntimeException {
+	public JsonNode createOutputJson(JsonNode jsonInput) throws NullPointerException, RuntimeException, IOException {
 		String url = jsonInput.get(URL).asText();
 		
-		if (jsonInput.get(PATH) == null) {
-			logger.log(Level.SEVERE, "No path specified for " + url);
+		if (jsonInput.get(PATH) == null)
 			throw new NullPointerException("Null path value in " + jsonInput);
-		}
 
 		JsonNode webInfo = createNewJson();
 		((ObjectNode) webInfo).put(URL, url);
 		
 		int urlSize = urlUtil.getUrlFileSize(url);
-		if (Integer.parseInt(jsonInput.get(SIZE).asText()) != urlSize) {
-			logger.log(Level.SEVERE, "Size of page in input file is incorrect for URL - " + url + ". Received size is " + urlSize + ".");
-			throw new RuntimeException("Retrieved unmatching size from " + url);
-		}
+		if (Integer.parseInt(jsonInput.get(SIZE).asText()) != urlSize)
+			throw new RuntimeException("Size of page in input JSON is incorrect for URL: " + url + "\nReceived size is " + urlSize);
 		
 		((ObjectNode) webInfo).put(SIZE, urlSize);
 		
@@ -73,10 +66,6 @@ public class JsonUtil {
 	
 	public JsonNode createNewJson() {
 		return mapper.createObjectNode();
-	}
-	
-	public String prettyPrint(JsonNode json) throws JsonProcessingException {
-		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
 	}
 
 }

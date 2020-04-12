@@ -1,7 +1,5 @@
 package com.webscrape.application;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +19,7 @@ public class WebScrape {
 	public static void main(String[] args) {
 		try {
 			//String input = args[0];
-			String input = "src/test/resources/jsonMultipleKeys.txt";
+			String input = "src/test/resources/empty.txt";
 			if (!input.contains(System.getProperty("user.dir")))
 				input = System.getProperty("user.dir") + "/" + input;
 			
@@ -41,11 +39,7 @@ public class WebScrape {
 			// Takes the resulting json and publishes to file
 			jsonUtil.createJsonFile(jsonInput);
 			System.exit(0);
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.toString());
-		} catch (InterruptedException e) {
-			logger.log(Level.SEVERE, e.toString());
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			logger.log(Level.SEVERE, e.toString());
 		} finally {
 			System.exit(-1);

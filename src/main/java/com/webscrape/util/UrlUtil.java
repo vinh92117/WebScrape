@@ -8,7 +8,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UrlUtil {
@@ -21,17 +20,18 @@ public class UrlUtil {
 	private static Logger logger = java.util.logging.Logger.getLogger(UrlUtil.class.getName());
 	
 	public boolean isValidUrl(String url) {
-			try {
-				new URL(addUrlPrefix(url)).toURI();
-			} catch (MalformedURLException e) {
-				return false;
-			} catch (URISyntaxException e) {
-				return false;
-			}
-			return true;
+		// If exception is thrown, URL string can not be converted, hence return false and don't shut down
+		try {
+			new URL(addUrlPrefix(url)).toURI();
+		} catch (MalformedURLException e) {
+			return false;
+		} catch (URISyntaxException e) {
+			return false;
+		}
+		return true;
 	}
 	
-	public int getUrlFileSize(String urlString) {
+	public int getUrlFileSize(String urlString) throws IOException {
 		URLConnection connection = null;
 		
 	    try {
@@ -45,25 +45,19 @@ public class UrlUtil {
 	        connection.getInputStream();
 	        
 	        int size = connection.getContentLength();
-	        if (size < 0) {
-	            logger.log(Level.SEVERE ,"Unable to retrieve size for " + url);
-	            //logger.shutDown(-1);
-	        }
+	        if (size < 0)
+	            throw new RuntimeException("Unable to retrieve size for " + url);
 	        
 	        return size;
 	    } catch (IOException e) {
-	        
-	    	e.printStackTrace();
-	        throw new RuntimeException(e);
-	    } finally {
 	        if (connection instanceof HttpURLConnection)
 	            ((HttpURLConnection)connection).disconnect();
+	        
+	        throw e;
 	    }
 	}
 	
-	public String extractJsonFromUrl(String url) {
-		String json = "";
-		
+	public String extractJsonFromUrl(String url) throws IOException {
 		try {
 			URL jsonUrl = new URL(addUrlPrefix(url));
 			
@@ -71,20 +65,17 @@ public class UrlUtil {
 			connection.setRequestMethod(GET);
 			connection.setRequestProperty(ACCEPT, APPLICATION_JSON);
 			
-			if (isValidConnection(connection.getResponseCode())) {
-				logger.log(Level.SEVERE, jsonUrl + " connection failed. HTTP error code : " + connection.getResponseCode());
-				System.exit(-1);
-			}
+			if (isValidConnection(connection.getResponseCode())) 
+				throw new RuntimeException(jsonUrl + " connection failed. HTTP error code : " + connection.getResponseCode());
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
-			json += br.readLine();
+			String json = br.readLine();
 
 			connection.disconnect();
+			return json;
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-		return json;
+			throw e;
+		}		
 	}
 	
 	public boolean isValidConnection(int responseCode) {		
