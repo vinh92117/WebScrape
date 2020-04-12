@@ -1,0 +1,6 @@
+[
+	"test" : {
+		"input": "this should not work",
+		"input2": "whole file should fail"
+	}
+]

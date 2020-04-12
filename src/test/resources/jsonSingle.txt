@@ -1,0 +1,5 @@
+{
+	"url": "www.google.com", 
+	"path": "path_value_1", 
+	"size": 1000
+}
