@@ -1,6 +1,0 @@
-com/webscrape/util/UrlUtil.class
-com/webscrape/application/WebScrape.class
-com/webscrape/thread/Processor.class
-com/webscrape/thread/Executor.class
-com/webscrape/util/FileUtil.class
-com/webscrape/util/JsonUtil.class
