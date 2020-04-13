@@ -43,8 +43,11 @@ public class ThreadProcessor extends Thread {
 	public JsonNode processJsonNodes(JsonNode json) throws InterruptedException {
 		// Iterate through the input of json(s) to process and format into desired output
 		if (!jsonUtil.isSingleLevelJson(json)) {
-			for (JsonNode node : json) 
+			for (JsonNode node : json) {
+				if (!jsonUtil.isSingleLevelJson(node)) // check if node has required keys and values
+					throw new RuntimeException("Missing required keys - " + node);
 				jsonNodes.add(node);
+			}
 		}
 		else
 			jsonNodes.add(json);
