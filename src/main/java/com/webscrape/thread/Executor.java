@@ -13,7 +13,7 @@ import com.webscrape.util.JsonUtil;
 public class Executor {
 	JsonUtil jsonUtil = new JsonUtil();
 	
-	public JsonNode execute(JsonNode json) throws InterruptedException, ExecutionException {
+	public JsonNode execute(JsonNode json) throws InterruptedException, ExecutionException, NullPointerException {
 		// Utilize 2 threads per core to avoid exhausting the CPU
 		int cores = Runtime.getRuntime().availableProcessors();
 		ExecutorService executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(cores * 2);
@@ -22,8 +22,11 @@ public class Executor {
 		// Check if its a single level json to prevent having path, url and size from being their own json
         JsonNode jsonToPublish = jsonUtil.createNewJson();
         if (!jsonUtil.isSingleLevelJson(json)) {
-	        for (JsonNode node : json)
+	        for (JsonNode node : json) {
+	        	if (node.get(jsonUtil.PATH) == null)
+	        		throw new NullPointerException("Null path value in " + node);
 	        	jsonUtil.appendJson(jsonToPublish, node.get(jsonUtil.PATH).asText(), process(executor, node).get());
+	        }
         }
         else
         	jsonUtil.appendJson(jsonToPublish, json.get(jsonUtil.PATH).asText(), process(executor, json).get());

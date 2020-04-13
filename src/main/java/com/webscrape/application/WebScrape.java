@@ -18,20 +18,18 @@ public class WebScrape {
 	
 	public static void main(String[] args) {
 		try {
-			//String input = args[0];
-			String input = "src/test/resources/empty.txt";
-			if (!input.contains(System.getProperty("user.dir")))
-				input = System.getProperty("user.dir") + "/" + input;
+			String input = args[0];
 			
-			// Check if input is a file or url. Load contents as string if it is a file
-			String fileContents = input;
+			// check if input is a local file or if it is a URL
+			JsonNode jsonInput = jsonUtil.createNewJson();
 			if (fileUtil.isLocalFile(input))
-				fileContents = fileUtil.loadFileContents(fileContents);
+				jsonInput = fileUtil.loadJsonContent(input);
 			
-			// Process file and check if url or json
-			if (urlUtil.isValidUrl(fileContents))
-				fileContents = urlUtil.extractJsonFromUrl(fileContents);
-			JsonNode jsonInput = jsonUtil.convertToJson(fileContents);
+			else if (urlUtil.isValidUrl(input))
+				jsonInput = urlUtil.extractJsonFromUrl(input);
+			
+			if (jsonInput.size() == 0 || jsonInput == null)
+				throw new NullPointerException("Invalid input");
 			
 			// Create multiple threads to process json
 			jsonInput = exeuctor.execute(jsonInput);
@@ -40,7 +38,7 @@ public class WebScrape {
 			jsonUtil.createJsonFile(jsonInput);
 			System.exit(0);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, e.toString());
+			logger.log(Level.SEVERE, "Shutting down", e);
 		} finally {
 			System.exit(-1);
 		}

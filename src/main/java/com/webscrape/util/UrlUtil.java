@@ -10,6 +10,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 public class UrlUtil {
 	private static final String HTTP = "http://";
 	private static final String HTTPS = "https://";
@@ -57,7 +59,7 @@ public class UrlUtil {
 	    }
 	}
 	
-	public String extractJsonFromUrl(String url) throws IOException {
+	public JsonNode extractJsonFromUrl(String url) throws IOException {
 		try {
 			URL jsonUrl = new URL(addUrlPrefix(url));
 			
@@ -69,7 +71,7 @@ public class UrlUtil {
 				throw new RuntimeException(jsonUrl + " connection failed. HTTP error code : " + connection.getResponseCode());
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
-			String json = br.readLine();
+			JsonNode json = new JsonUtil().convertToJson((br.readLine()));
 
 			connection.disconnect();
 			return json;
