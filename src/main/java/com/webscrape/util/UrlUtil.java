@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -26,21 +25,21 @@ public class UrlUtil {
 			new URL(addUrlPrefix(url));
 		} catch (MalformedURLException e) {
 			return false;
-		}
-		
+		}		
 		return true;
 	}
 	
-	public int getUrlFileSize(String urlString) throws MalformedURLException, IOException {
+	public int getUrlFileSize(String urlString) throws IOException {
 		Logger logger = java.util.logging.Logger.getLogger(UrlUtil.class.getName());
 		logger.info("Retrieving size from " + urlString);
 		
-		URLConnection connection = new URL(addUrlPrefix(urlString)).openConnection();
+		HttpURLConnection connection = (HttpURLConnection) new URL(addUrlPrefix(urlString)).openConnection();
 		String encoding = connection.getContentEncoding();
 		if (encoding == null)
 			encoding = "UTF-8";
 		
 	    int size = IOUtils.toString(connection.getInputStream(), encoding).getBytes().length;
+	    connection.disconnect();
         if (size < 0)
             throw new RuntimeException("Unable to retrieve size for " + urlString);
         

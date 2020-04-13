@@ -1,9 +1,12 @@
 package com.webscrape.thread;
 
+import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -13,8 +16,9 @@ import com.webscrape.util.JsonUtil;
 public class Executor {
 	JsonUtil jsonUtil = new JsonUtil();
 	Logger logger = java.util.logging.Logger.getLogger(Executor.class.getName());
+	BlockingQueue<Future<JsonNode>> nodeQueue = new LinkedBlockingQueue<Future<JsonNode>>(); 
 	
-	public JsonNode execute(JsonNode json) throws InterruptedException, ExecutionException {
+	public JsonNode execute(JsonNode json) throws InterruptedException, ExecutionException, IOException {
 		// Utilize 2 threads per core to avoid exhausting the CPU
 		int cores = Runtime.getRuntime().availableProcessors();
 		ExecutorService executor = Executors.newFixedThreadPool(cores * 2);
@@ -26,19 +30,23 @@ public class Executor {
 	        for (JsonNode node : json) {
 	        	if (node.get(jsonUtil.PATH) == null)
 	        		logger.severe("Null path value in " + node);
-	        	jsonUtil.appendJson(jsonToPublish, node.get(jsonUtil.PATH).asText(), process(executor, node).get());
+	        	nodeQueue.add(process(executor, node));
 	        }
         }
         else
-        	jsonUtil.appendJson(jsonToPublish, json.get(jsonUtil.PATH).asText(), process(executor, json).get());
-        	
+        	nodeQueue.add(process(executor, json));
 
 		executor.awaitTermination(1, TimeUnit.SECONDS);
- 
         executor.shutdown();
+        while (!nodeQueue.isEmpty()) {
+        	JsonNode queueNode = nodeQueue.poll().get();
+        	jsonUtil.appendJson(jsonToPublish, queueNode.get(jsonUtil.PATH).asText(), jsonUtil.createOutputJson(queueNode));
+        }
+ 
         return jsonToPublish;
 	}
 	
+	// Utilizes callable in Processor class
 	private Future<JsonNode> process(ExecutorService executor, JsonNode json) {
         return executor.submit(new Processor(json));
 	}

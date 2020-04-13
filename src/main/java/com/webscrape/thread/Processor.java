@@ -14,7 +14,7 @@ public class Processor implements Callable<JsonNode> {
 	}
 
 	public JsonNode call() throws IOException {
-		return new JsonUtil().createOutputJson(node);
+		return new JsonUtil().processJson(node);
 	}
 
 }
