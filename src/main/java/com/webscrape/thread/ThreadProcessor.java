@@ -25,8 +25,8 @@ public class ThreadProcessor extends Thread {
 			while (!jsonNodes.isEmpty()) {
 				JsonNode node = jsonNodes.poll();
 				path = node.get(jsonUtil.PATH).asText();
-				//if (jsonToPublish.has(path))
-				//	throw new RuntimeException("Duplicate path found");
+				if (jsonToPublish.has(path))
+					throw new RuntimeException("Duplicate path found");
 				
 				jsonUtil.appendJson(jsonToPublish, path, jsonUtil.createOutputJson(node));
 			}
