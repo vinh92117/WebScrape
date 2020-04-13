@@ -18,6 +18,7 @@ public class UrlUtil {
 	private static final String GET = "GET";
 	private static final String ACCEPT = "Accept";
 	private static final String APPLICATION_JSON = "application/json";
+	private static final String UTF_8 = "UTF-8";
 	
 	public boolean isValidUrl(String url) {
 		// If exception is thrown, URL string can not be converted, hence return false and don't shut down
@@ -36,7 +37,7 @@ public class UrlUtil {
 		HttpURLConnection connection = (HttpURLConnection) new URL(addUrlPrefix(urlString)).openConnection();
 		String encoding = connection.getContentEncoding();
 		if (encoding == null)
-			encoding = "UTF-8";
+			encoding = UTF_8;
 		
 	    int size = IOUtils.toString(connection.getInputStream(), encoding).getBytes().length;
 	    connection.disconnect();
@@ -57,7 +58,7 @@ public class UrlUtil {
 			if (isValidConnection(connection.getResponseCode())) 
 				throw new RuntimeException(jsonUrl + " connection failed. HTTP error code : " + connection.getResponseCode());
 			
-			BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
+			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			JsonNode json = new JsonUtil().convertToJson((br.readLine()));
 			
 			connection.disconnect();

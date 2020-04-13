@@ -3,7 +3,6 @@ package com.webscrape.util;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +15,6 @@ public class JsonUtil {
 	public final String OUTPUT_JSON = "Output.json";
 	
 	ObjectMapper mapper = new ObjectMapper();
-	Logger logger = java.util.logging.Logger.getLogger(JsonUtil.class.getName());
 	UrlUtil urlUtil = new UrlUtil();
 	
 	public JsonNode convertToJson(String input) throws IOException {
@@ -65,7 +63,7 @@ public class JsonUtil {
 	
 	public void createJsonFile(JsonNode json) throws IOException {
 		mapper.writeValue(new File(OUTPUT_JSON), json);
-		logger.info("Operation successful. Generated " + OUTPUT_JSON + " file");
+		java.util.logging.Logger.getLogger(JsonUtil.class.getName()).info("Operation successful. Generated " + OUTPUT_JSON + " file");
 	}
 	
 	@SuppressWarnings("deprecation")
