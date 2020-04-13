@@ -29,9 +29,6 @@ public class JsonUtil {
 	
 	// Process incoming JSONs by calling to their designated URLs and updating the size
 	public JsonNode processJson(JsonNode jsonInput) throws MalformedURLException, IOException {
-		if (jsonInput.get(PATH) == null)
-			throw new NullPointerException("Null path value in " + jsonInput);
-
 		String url = jsonInput.get(URL).asText();
 		int urlSize = urlUtil.getUrlFileSize(url);
 		if (Integer.parseInt(jsonInput.get(SIZE).asText()) != urlSize)
@@ -43,11 +40,11 @@ public class JsonUtil {
 	}
 	
 	// Take the JSON input and return only the web info so that it can be stored into a JSON with their path as the key
-	public JsonNode createOutputJson(JsonNode jsonInput) {
-		logger.info(jsonInput.toString());
+	public JsonNode createOutputJson(JsonNode jsonInput) throws IOException {
+		String url = jsonInput.get(URL).asText();
 		JsonNode webInfo = createNewJson();
-		((ObjectNode) webInfo).put(URL, jsonInput.get(URL).asText());
-		((ObjectNode) webInfo).put(SIZE, jsonInput.get(SIZE).asText());
+		((ObjectNode) webInfo).put(URL, url);
+		((ObjectNode) webInfo).put(SIZE, urlUtil.getUrlFileSize(url));
 		
 		return webInfo;
 	}

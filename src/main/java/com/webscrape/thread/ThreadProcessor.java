@@ -1,7 +1,6 @@
 package com.webscrape.thread;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -26,17 +25,14 @@ public class ThreadProcessor extends Thread {
 			while (!jsonNodes.isEmpty()) {
 				JsonNode node = jsonNodes.poll();
 				path = node.get(jsonUtil.PATH).asText();
-				if (jsonToPublish.has(path))
-					throw new RuntimeException("Duplicate path found");
+				//if (jsonToPublish.has(path))
+				//	throw new RuntimeException("Duplicate path found");
 				
-				jsonUtil.appendJson(jsonToPublish, path, jsonUtil.processJson(node));
+				jsonUtil.appendJson(jsonToPublish, path, jsonUtil.createOutputJson(node));
 			}
 			threadList.remove(this.getId());
 		} catch (RuntimeException e) {
 			logger.log(Level.SEVERE, "Duplicate paths found for ", e);
-			System.exit(-1);
-		} catch (MalformedURLException e) {
-			logger.severe(e.toString());
 			System.exit(-1);
 		} catch (IOException e) {
 			logger.severe(e.toString());
