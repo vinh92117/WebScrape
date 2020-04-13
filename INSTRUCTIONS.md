@@ -30,7 +30,9 @@ After maven building the pom.xml, move the jar file to desired directory. Run th
 java -jar uber-webscrape-application-0.0.1-SNAPSHOT !{$FILE_NAME_OR_DIRECTORY_OR_URL_HERE}
 
 Example: java -jar uber-webscrape-application-0.0.1-SNAPSHOT MyJsonFile.json
+
          java -jar uber-webscrape-application-0.0.1-SNAPSHOT /diretory/to/file/jsonFile.json
+         
          java -jar uber-webscrape-application-0.0.1-SNAPSHOT www.MyJsonURL.com
 
 The file Output.json will be generated in the same directory if the operation is successful. 
