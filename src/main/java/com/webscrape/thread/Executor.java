@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.webscrape.util.JsonUtil;
 
+@Deprecated
 public class Executor {
 	JsonUtil jsonUtil = new JsonUtil();
 	Logger logger = java.util.logging.Logger.getLogger(Executor.class.getName());

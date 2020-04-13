@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.webscrape.thread.Executor;
+import com.webscrape.thread.ThreadProcessor;
 import com.webscrape.util.FileUtil;
 import com.webscrape.util.JsonUtil;
 import com.webscrape.util.UrlUtil;
@@ -14,7 +14,7 @@ public class WebScrape {
 	static FileUtil fileUtil = new FileUtil();
 	static JsonUtil jsonUtil = new JsonUtil();
 	static UrlUtil urlUtil = new UrlUtil();
-	static Executor exeuctor = new Executor();
+	static ThreadProcessor threadProcessor = new ThreadProcessor();
 	
 	public static void main(String[] args) {
 		try {
@@ -32,8 +32,8 @@ public class WebScrape {
 				throw new NullPointerException("Invalid input");
 			
 			// Create multiple threads to process json
-			jsonInput = exeuctor.execute(jsonInput);
-	
+			jsonInput = threadProcessor.processJsonNodes(jsonInput);
+			
 			// Takes the resulting json and publishes to file
 			jsonUtil.createJsonFile(jsonInput);
 			System.exit(0);
