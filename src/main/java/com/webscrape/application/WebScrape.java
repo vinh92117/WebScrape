@@ -26,7 +26,7 @@ public class WebScrape {
 				jsonInput = fileUtil.loadJsonContent(input);
 			
 			else if (urlUtil.isValidUrl(input))
-				jsonInput = urlUtil.extractJsonFromUrl(input);
+				jsonInput = urlUtil.extractJsonFromUrl(input);		
 			
 			if (jsonInput == null || jsonInput.size() == 0)
 				throw new NullPointerException("Invalid input");
