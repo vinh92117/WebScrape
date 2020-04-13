@@ -7,15 +7,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.webscrape.util.JsonUtil;
 
 public class Processor implements Callable<JsonNode> {
-	JsonUtil jsonUtil = new JsonUtil();
-	JsonNode node;
+	private JsonNode node;
 	
 	public Processor(JsonNode node) {
 		this.node = node;
 	}
 
 	public JsonNode call() throws NullPointerException, RuntimeException, IOException {
-		return jsonUtil.createOutputJson(node);
+		return new JsonUtil().createOutputJson(node);
 	}
 
 }
