@@ -37,6 +37,4 @@ Example:
          java -jar uber-webscrape-application-0.0.1-SNAPSHOT /diretory/to/file/jsonFile.json
          java -jar uber-webscrape-application-0.0.1-SNAPSHOT www.jsonFileUrl.com
 
-  5)A Output.json file will be generated in the same directory if the operation is successful. Exceptions will be thrown if there are any errors along with logs stating why.
-
-
+  5) If the operation is successful, a Output.json file will be generated in the same directory of the jar file. Exceptions will be thrown if there are any errors along with logs stating why.
