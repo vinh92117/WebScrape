@@ -1,9 +1,12 @@
 package com.webscrape.thread;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.webscrape.util.JsonUtil;
@@ -15,6 +18,8 @@ public class ThreadProcessor extends Thread {
 	private static BlockingQueue<JsonNode> jsonNodes = new LinkedBlockingDeque<JsonNode>();
 	private static ArrayList<Long> threadList = new ArrayList<Long>();
 	
+	Logger logger = java.util.logging.Logger.getLogger(JsonUtil.class.getName());
+	
 	public void run() {
 		String path;
 		try { 
@@ -24,11 +29,17 @@ public class ThreadProcessor extends Thread {
 				if (jsonToPublish.has(path))
 					throw new RuntimeException("Duplicate path found");
 				
-				jsonUtil.appendJson(jsonToPublish, path, jsonUtil.createOutputJson(node));
+				jsonUtil.appendJson(jsonToPublish, path, jsonUtil.processJson(node));
 			}
 			threadList.remove(this.getId());
 		} catch (RuntimeException e) {
-			java.util.logging.Logger.getLogger(JsonUtil.class.getName()).log(Level.SEVERE, "Duplicate paths found for ", e);
+			logger.log(Level.SEVERE, "Duplicate paths found for ", e);
+			System.exit(-1);
+		} catch (MalformedURLException e) {
+			logger.severe(e.toString());
+			System.exit(-1);
+		} catch (IOException e) {
+			logger.severe(e.toString());
 			System.exit(-1);
 		}
 	}
