@@ -8,14 +8,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.webscrape.util.JsonUtil;
 
 public class Executor {
 	JsonUtil jsonUtil = new JsonUtil();
-	Logger logger = java.util.logging.Logger.getLogger(Executor.class.getName());
 	BlockingQueue<Future<JsonNode>> nodeQueue = new LinkedBlockingQueue<Future<JsonNode>>(); 
 	
 	public JsonNode execute(JsonNode json) throws InterruptedException, ExecutionException, IOException {
