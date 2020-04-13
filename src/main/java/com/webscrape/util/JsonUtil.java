@@ -2,7 +2,6 @@ package com.webscrape.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,24 +26,18 @@ public class JsonUtil {
 		return json;
 	}
 	
-	// Process incoming JSONs by calling to their designated URLs and updating the size
-	public JsonNode processJson(JsonNode jsonInput) throws MalformedURLException, IOException {
+	// Take the JSON input and return only the web info so that it can be stored into a JSON with their path as the key
+	public JsonNode createOutputJson(JsonNode jsonInput) throws IOException {
+		JsonNode webInfo = createNewJson();
+		
 		String url = jsonInput.get(URL).asText();
+		((ObjectNode) webInfo).put(URL, url);
+		
 		int urlSize = urlUtil.getUrlFileSize(url);
 		if (Integer.parseInt(jsonInput.get(SIZE).asText()) != urlSize)
 			throw new RuntimeException("Size of page in input JSON is incorrect for URL: " + url + "\nReceived size is " + urlSize);
 		
-		((ObjectNode) jsonInput).put(SIZE, urlSize);
-		
-		return jsonInput;
-	}
-	
-	// Take the JSON input and return only the web info so that it can be stored into a JSON with their path as the key
-	public JsonNode createOutputJson(JsonNode jsonInput) throws IOException {
-		String url = jsonInput.get(URL).asText();
-		JsonNode webInfo = createNewJson();
-		((ObjectNode) webInfo).put(URL, url);
-		((ObjectNode) webInfo).put(SIZE, urlUtil.getUrlFileSize(url));
+		((ObjectNode) webInfo).put(SIZE, urlSize);
 		
 		return webInfo;
 	}
