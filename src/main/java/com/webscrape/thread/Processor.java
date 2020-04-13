@@ -13,7 +13,7 @@ public class Processor implements Callable<JsonNode> {
 		this.node = node;
 	}
 
-	public JsonNode call() throws NullPointerException, RuntimeException, IOException {
+	public JsonNode call() throws IOException {
 		return new JsonUtil().createOutputJson(node);
 	}
 

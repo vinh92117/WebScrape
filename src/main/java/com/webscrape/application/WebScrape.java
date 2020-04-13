@@ -28,7 +28,7 @@ public class WebScrape {
 			else if (urlUtil.isValidUrl(input))
 				jsonInput = urlUtil.extractJsonFromUrl(input);
 			
-			if (jsonInput.size() == 0 || jsonInput == null)
+			if (jsonInput == null || jsonInput.size() == 0)
 				throw new NullPointerException("Invalid input");
 			
 			// Create multiple threads to process json

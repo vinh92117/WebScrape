@@ -27,7 +27,7 @@ public class JsonUtil {
 		return json;
 	}
 	
-	public JsonNode createOutputJson(JsonNode jsonInput) throws NullPointerException, RuntimeException, IOException {
+	public JsonNode createOutputJson(JsonNode jsonInput) throws IOException {
 		String url = jsonInput.get(URL).asText();
 		
 		if (jsonInput.get(PATH) == null)
