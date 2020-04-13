@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
@@ -31,6 +32,9 @@ public class UrlUtil {
 	}
 	
 	public int getUrlFileSize(String urlString) throws MalformedURLException, IOException {
+		Logger logger = java.util.logging.Logger.getLogger(UrlUtil.class.getName());
+		logger.info("Retrieving size from " + urlString);
+		
 		URLConnection connection = new URL(addUrlPrefix(urlString)).openConnection();
 		String encoding = connection.getContentEncoding();
 		if (encoding == null)

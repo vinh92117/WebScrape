@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,7 +25,7 @@ public class Executor {
         if (!jsonUtil.isSingleLevelJson(json)) {
 	        for (JsonNode node : json) {
 	        	if (node.get(jsonUtil.PATH) == null)
-	        		logger.log(Level.SEVERE, "Null path value in " + node);
+	        		logger.severe("Null path value in " + node);
 	        	jsonUtil.appendJson(jsonToPublish, node.get(jsonUtil.PATH).asText(), process(executor, node).get());
 	        }
         }

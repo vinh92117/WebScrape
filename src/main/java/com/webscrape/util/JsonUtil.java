@@ -2,7 +2,6 @@ package com.webscrape.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -47,7 +46,7 @@ public class JsonUtil {
 	
 	public void createJsonFile(JsonNode json) throws IOException {
 		mapper.writeValue(new File(OUTPUT_JSON), json);
-		logger.log(Level.INFO, "Operation successful. Generated " + OUTPUT_JSON + " file");
+		logger.info("Operation successful. Generated " + OUTPUT_JSON + " file");
 	}
 	
 	@SuppressWarnings("deprecation")
