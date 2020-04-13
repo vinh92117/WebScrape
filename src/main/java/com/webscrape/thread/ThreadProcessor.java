@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.webscrape.util.JsonUtil;
 
+@Deprecated
 public class ThreadProcessor extends Thread {
 	static JsonUtil jsonUtil = new JsonUtil();
 	

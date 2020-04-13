@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.webscrape.util.JsonUtil;
 
-@Deprecated
 public class Executor {
 	JsonUtil jsonUtil = new JsonUtil();
 	Logger logger = java.util.logging.Logger.getLogger(Executor.class.getName());
@@ -29,8 +28,8 @@ public class Executor {
         JsonNode jsonToPublish = jsonUtil.createNewJson();
         if (!jsonUtil.isSingleLevelJson(json)) {
 	        for (JsonNode node : json) {
-	        	if (node.get(jsonUtil.PATH) == null)
-	        		logger.severe("Null path value in " + node);
+				if (!jsonUtil.isSingleLevelJson(node)) // check if node has required keys and values 
+					throw new RuntimeException("Missing required keys - " + node);
 	        	nodeQueue.add(process(executor, node));
 	        }
         }
@@ -41,7 +40,7 @@ public class Executor {
         executor.shutdown();
         while (!nodeQueue.isEmpty()) {
         	JsonNode queueNode = nodeQueue.poll().get();
-        	jsonUtil.appendJson(jsonToPublish, queueNode.get(jsonUtil.PATH).asText(), jsonUtil.createOutputJson(queueNode));
+        	jsonUtil.appendJson(jsonToPublish, queueNode.get(jsonUtil.PATH).asText(), jsonUtil.getWebInfo(queueNode));
         }
  
         return jsonToPublish;

@@ -39,6 +39,14 @@ public class JsonUtil {
 		return jsonInput;
 	}
 	
+	// Process jsons and return only the web info
+	public JsonNode getWebInfo(JsonNode jsonInput) {
+		JsonNode webInfo = createNewJson();
+		((ObjectNode) webInfo).put(URL, jsonInput.get(URL).asText());
+		((ObjectNode) webInfo).put(SIZE, jsonInput.get(SIZE).asText());
+		return webInfo;
+	}
+	
 	// Take the JSON input and return only the web info so that it can be stored into a JSON with their path as the key
 	public JsonNode createOutputJson(JsonNode jsonInput) throws IOException {
 		JsonNode webInfo = createNewJson();
